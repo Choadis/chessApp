@@ -1,4 +1,5 @@
 import React from 'react';
+import GameBoard from './GameBoard';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 export default class Chat extends React.Component {
   constructor(props) {
@@ -81,6 +82,7 @@ export default class Chat extends React.Component {
       <Grid>
       <Grid.Row>
       <Grid.Column width={12}>
+      { this.props.game && <GameBoard room={this.props.game} user={this.props.user} ref={(child) => { this._gameBoard = child; }}/> }
       <Comment.Group style={{height: '20em', overflow: 'auto'}}>
       { messages }
       </Comment.Group>
