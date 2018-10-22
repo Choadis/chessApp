@@ -90,10 +90,9 @@ export default class Games extends React.Component {
     if (currentUser) {
       const room = currentUser.rooms.find((room) => room.id === this.state.activeRoom);
       if (room) {
-        chat = <Chat user={currentUser} room={room} />
+        chat = <Chat user={currentUser} room={room} key={room.id} />
       }
     }
-
     return (
       <Segment>
       <Grid>
@@ -105,6 +104,7 @@ export default class Games extends React.Component {
       leaveRoom={this._leaveRoom.bind(this)} />
       </Grid.Column>
       <Grid.Column width={12}>
+      { chat }
       </Grid.Column>
       </Grid>
       </Segment>
