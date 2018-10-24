@@ -1,15 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Pusher = require('pusher');
-
-var pusher = new Pusher({
-  appId: 'PUSHER_APP_ID',
-  key: 'PUSHER_APP_KEY',
-  secret: 'PUSHER_APP_SECRET',
-  cluster: 'PUSHER_CLUSTER',
-  encrypted: true
-});
-
 const games = {};
 router.post('/', (req, res) => {
   const room = req.body.room;

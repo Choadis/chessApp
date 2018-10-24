@@ -3,6 +3,7 @@ import { Segment, Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit';
 import Rooms from './Rooms';
 import Chat from './Chat';
+import axios from 'axios';
 
 export default class Games extends React.Component {
   state = {
@@ -84,15 +85,34 @@ export default class Games extends React.Component {
     });
   }
 
+  _startedGame(roomId, white, black) {
+    axios.request({
+      url: 'http://localhost:4000/games',
+      method: 'POST',
+      data: {
+        room: roomId,
+        whitePlayer: white,
+        blackPlayer: black
+      }
+    })
+    .then((response) => {
+      this.setState({
+        activeRoom: roomId
+      });
+      this._pollRooms();
+    });
+  }
+
+
   render() {
     const { currentUser } = this.state;
     let chat;
     if (currentUser) {
-      const room = currentUser.rooms.find((room) => room.id == this.state.activeRoom);
-      if (room) {
-        const game = this.state.activeRoom !== this.state.lobbyId && this.state.activeRoom;
-        chat = <Chat user={currentUser} room={room} key={room.id} startedGame={this._startedGame.bind(this)} game={game} />
-      }
+        const room = currentUser.rooms.find((room) => room.id === this.state.activeRoom);
+        if (room) {
+            const game = this.state.activeRoom !== this.state.lobbyId && this.state.activeRoom;
+            chat = <Chat user={currentUser} room={room} key={room.id} startedGame={this._startedGame.bind(this)} game={game} ref={(child) => { this._chat = child; }}/>
+        }
     }
     return (
       <Segment>
