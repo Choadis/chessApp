@@ -4,12 +4,14 @@ import { List, Icon, Header } from 'semantic-ui-react';
 export default function Rooms({ joined, joinable, activeRoom, enterRoom, leaveRoom }) {
   const joinedRooms = joined.map((room) => (
     <List.Item key={room.id}>
-    <List.Content floated='right'>
-    <button onClick={() => leaveRoom(room.id)}>Leave</button>
-    </List.Content>
+    { room.id === activeRoom && (
+      <List.Content floated='right'>
+      <a onClick={() => leaveRoom(room.id)}>Leave</a>
+      </List.Content>)
+    }
     <Icon name={room.id === activeRoom ? 'right triangle' : ''} />
     <List.Content>
-    <button onClick={() => enterRoom(room.id)}>{ room.name }</button>
+    <a onClick={() => enterRoom(room.id)}>{ room.name }</a>
     </List.Content>
     </List.Item>
   ));
