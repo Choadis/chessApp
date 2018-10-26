@@ -1,6 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import { Grid, List } from 'semantic-ui-react';
+import Pusher from 'pusher-js';
+
+var pusher = new Pusher('2cc7e1dc6a9894677d00', {
+  cluster: 'us2',
+  forceTLS: true
+});
 
 const PIECES = {
   'WK': '♔',
@@ -16,11 +22,13 @@ const PIECES = {
   'BN': '♞',
   'BP': '♟'
 }
+
 export default class GameBoard extends React.Component {
   state = {
     board: [],
     players: {}
   };
+
   render() {
     const board = this.state.board
     .map((row, rowIndex) => {
@@ -45,6 +53,7 @@ export default class GameBoard extends React.Component {
         </List.Item>
       );
     });
+
     return (
       <Grid>
       <Grid.Row columns={2}>
@@ -68,9 +77,25 @@ export default class GameBoard extends React.Component {
       </Grid>
     );
   }
+
   componentDidMount() {
+    const room = this.props.room;
+    const channel = pusher.subscribe(`game-${room}`);
+    channel.bind('board-updated', () => {
+      this._refreshGame();
+    });
     this._refreshGame();
   }
+
+  componentWillUnmount() {
+    const room = this.props.room;
+    pusher.unsubscribe(`game-${room}`);
+  }
+
+  getPlayers() {
+    return Object.keys(this.state.players);
+  }
+
   _handleBoardClick(e) {
     const dim = e.target.getBoundingClientRect();
     const x = e.clientX - dim.left;
@@ -107,6 +132,7 @@ export default class GameBoard extends React.Component {
       });
     }
   }
+
   _refreshGame() {
     axios.request({
       url: 'http://localhost:4000/games/' + this.props.room
