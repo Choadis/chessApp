@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Grid, List } from 'semantic-ui-react';
+
 const PIECES = {
   'WK': '♔',
   'WQ': '♕',
